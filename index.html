@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue-Js-Caurd</title>
+    <!-- Css-Link -->
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/responsive.css">
+    <link rel="stylesheet" href="assets/css/custom.css">
+    <link rel="stylesheet" href="assets/css/font-awesome.min.css">
+</head>
+<body style="background-color: rgb(210, 212, 214);">
+
+    <section id="cuard" style="margin-top: 60px;">
+       <div class="container">
+           <div class="row">
+               <div class="col-lg-12">
+                   <div class="wrap-table">
+                      <div class="card mt-5 shadow-lg">
+                          <div class="card-header">
+                            <h2>All Users</h2>
+                            <a data-toggle="modal" href="#add-user-modal" class="btn btn-outline-info">Add New User</a>
+                            <div class="search">
+                                <input v-model="search" @keyup="Search" type="text" class="float-right" placeholder="Search Here">
+                            </div>
+                          </div>
+                          <div class="card-body">
+                             <div class="row">
+                                <div class="col">
+                                    <div class="form-group location">
+                                        <label for="Location">Location</label>
+                                        <select v-model="location" @change="LocationSearch" class="form-control" name="" id="">
+                                            <option value="">--Select--</option>
+                                            <option value="Mirpur">Mirpur</option>
+                                            <option value="Badda">Badda</option>
+                                            <option value="Bonani">Bonani</option>
+                                            <option value="Uttra">Uttra</option>
+                                            <option value="Gazipur">Gazipur</option>
+                                            <option value="Shamoli">Shamoli</option>
+                                        </select>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group gender">
+                                            <label for="Gander">Gander</label><br>
+                                            <input v-model="ganderMale" @click="GanderSearchMale" type="radio" value="Male" name="Male" class="ml-2"><label for="Male">Male</label>
+                                            <input v-model="ganderFemale" @click="GanderSearchFemale" type="radio" value="Female" name="Female"><label for="Female">Female</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                             <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Cell</th>
+                                        <th>Location</th>
+                                        <th>Gander</th>
+                                        <th>Photo</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(user, i) in users">
+                                        <td>{{ i+1 }}</td>
+                                        <td>{{ user.name }}</td>
+                                        <td>{{ user.email }}</td>
+                                        <td>{{ user.cell }}</td>
+                                        <td>{{ user.location }}</td>
+                                        <td>{{ user.gander }}</td>
+                                        <td>
+                                            <img :src="'media/users/' + user.photo" alt="">
+                                        </td>
+                                        <td>
+                                            <a @click="showSingleUser(user.id, $event)" data-toggle="modal" class="btn btn-sm btn-info" href="#Single_user_show"><i class="fa fa-eye" aria-hidden="true"></i></a>
+                                            <a @click="editSingleUser(user.id, $event)" data-toggle="modal" class="btn btn-sm btn-warning" href="#Edit_Single_User"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                                            <a @click="deleteSingleUser(user.id, $event)" href="#" class="btn btn-sm btn-danger mr-3"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                             </table>
+                          </div>
+                      </div>
+                   </div>
+               </div>
+           </div>
+       </div>
+
+       <!-- Add User Modal Show -->
+       <div id="add-user-modal" class="modal fade">
+           <div class="modal-dialog modal-dialog-centered">
+               <div class="modal-content">
+                   <div class="modal-body">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Add New User</h4>
+                            <button class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="card shadow-lg">
+                            <div class="card-body">
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="form-group">
+                                                <label for="Name">Name</label>
+                                                <input v-model="user.name" type="text" class="form-control" placeholder="Enter Your Name">
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="form-group">
+                                                <label for="Email">Email</label>
+                                                <input v-model="user.email" type="text" class="form-control" placeholder="Enter Your Email">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="form-group">
+                                                <label for="Cell">Cell</label>
+                                                <input v-model="user.cell" type="text" class="form-control" placeholder="Enter Your Cell">
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="form-group">
+                                                <label for="Location">Location</label>
+                                                <select v-model="user.location" class="form-control" name="" id="">
+                                                    <option value="">--Select--</option>
+                                                    <option value="Mirpur">Mirpur</option>
+                                                    <option value="Badda">Badda</option>
+                                                    <option value="Bonani">Bonani</option>
+                                                    <option value="Uttra">Uttra</option>
+                                                    <option value="Gazipur">Gazipur</option>
+                                                    <option value="Shamoli">Shamoli</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="form-group">
+                                                <label for="Gander">Gander</label><br>
+                                                <input v-model="user.gander" type="radio" value="Male" name="Male" id="Male"><label for="Male">Male</label><br>
+                                                <input v-model="user.gander" type="radio" value="Female" name="Female" id="Female"><label for="Female">Female</label>
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="form-group">
+                                                <label for="Photo">Photo</label>
+                                                <input ref="photo" type="file">
+                                            </div>
+                                        </div>
+                                </div>
+                                <div class="form-group">
+                                    <input @click="addNewUser" type="submit" value="Add User" class="btn btn-success">
+                                </div>
+                            </div>
+                        </div>
+                   </div>
+               </div>
+           </div>
+       </div>
+
+       <!-- Single User Show Modal -->
+       <div id="Single_user_show" class="modal fade">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Show Single User</h4>
+                            <button class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="card shadow-lg">
+                            <div class="card-body">
+                                <img class="shadow-lg" style="height: 250px; width: 250px; border: 9px solid wheat; display: block; margin: auto; border-radius: 5px; object-fit: cover;" :src="'media/users/' + single_user.photo " alt="">    
+                            </div>
+                            <h3 style="margin: auto;">{{ single_user.name }}</h3>
+                            <table class="table table-striped">
+                                <tr>
+                                    <td>Name</td>
+                                    <td>{{ single_user.name }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Emai</td>
+                                    <td>{{ single_user.email }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Cell</td>
+                                    <td>{{ single_user.cell }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Location</td>
+                                    <td>{{ single_user.location }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Gander</td>
+                                    <td>{{ single_user.gander }}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+       <!-- Edit User Modal Show -->
+       <div id="Edit_Single_User" class="modal fade">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Edit User</h4>
+                            <button class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="card shadow-lg">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label for="Name">Name</label>
+                                            <input v-model="edit_user.name" type="text" class="form-control" placeholder="Enter Your Name">
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label for="Email">Email</label>
+                                            <input v-model="edit_user.email" type="text" class="form-control" placeholder="Enter Your Email">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label for="Cell">Cell</label>
+                                            <input v-model="edit_user.cell" type="text" class="form-control" placeholder="Enter Your Cell">
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label for="Location">Location</label>
+                                            <select v-model="edit_user.location" class="form-control" name="" id="">
+                                                <option value="">--Select--</option>
+                                                <option value="Mirpur">Mirpur</option>
+                                                <option value="Badda">Badda</option>
+                                                <option value="Bonani">Bonani</option>
+                                                <option value="Uttra">Uttra</option>
+                                                <option value="Gazipur">Gazipur</option>
+                                                <option value="Shamoli">Shamoli</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label for="Gander">Gander</label><br>
+                                            <input v-model="edit_user.gander" type="radio" value="Male" name="Male" id="Male"><label for="Male">Male</label><br>
+                                            <input v-model="edit_user.gander" type="radio" value="Female" name="Female" id="Female"><label for="Female">Female</label>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <label for="Photo">Photo</label>
+                                            <input @change="photoUplaod($event)" ref="newPhoto" type="file">
+                                            <input v-model="edit_user.photo" type="hidden">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <input @click="updateSingleUser(edit_user.id, $event)" type="submit" value="Update User" class="btn btn-success">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+       </div>
+
+    </section>
+
+    <!-- Js-Link -->
+    <script src="assets/js/jquery-3.4.1.min.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script>
+
+    <!-- Vue-Js-Link -->
+    <script src="assets/js/vue.js"></script>
+    <script src="assets/js/vue-router.js"></script>
+    <script src="assets/js/axios.min.js"></script>
+    <script src="assets/js/custom_scripts.js"></script>
+
+</body>
+</html>
